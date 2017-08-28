@@ -110,11 +110,11 @@ ds.insert("PROBA","PEPE" to "djsjsjs","ID" to "1")*/
 
     }
 
-    fun addLessonToDB(lesson: String): Klesson {
+    fun addLessonToDB(lesson: String): KLesson {
         log.warn("DBHelp addLessonToDB")
         //CreateDB()
         var nR: Long = 0
-        var k: Klesson = Klesson("pepe", 10)
+        var k: KLesson = KLesson("pepe", 10)
 
         try {
             var ds: SQLiteDatabase = DB2!!.writableDatabase
@@ -135,12 +135,12 @@ ds.insert("PROBA","PEPE" to "djsjsjs","ID" to "1")*/
     }
 
 
-    fun Test():List<Klesson> {
-        //val l:Klesson
+    fun Test():List<KLesson> {
+        //val l:KLesson
         log.warn { "TESTTTTTXXXXXXXXXXXXXXXXXXXXXXX" }
         var ds: SQLiteDatabase = DB2!!.writableDatabase
-        val L2: List<Klesson>
-        val rowParser = classParser<Klesson>()
+        val L2: List<KLesson>
+        val rowParser = classParser<KLesson>()
         try {
             L2 = DB2!!.use {
                 select("LESSONS", "NAME", "ID").exec { parseList(rowParser) }

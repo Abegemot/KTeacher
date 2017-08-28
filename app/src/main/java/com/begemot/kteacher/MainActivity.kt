@@ -13,15 +13,14 @@ import android.content.Intent
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import android.R.attr.data
 import android.widget.*
 import org.jetbrains.anko.*
 
 
 class MainActivity : AppCompatActivity() {
 
-    var lesonList = ArrayList<Klesson>()
-    lateinit var myListAdapter:ArrayAdapter<Klesson>
+    var lesonList = ArrayList<KLesson>()
+    lateinit var myListAdapter:ArrayAdapter<KLesson>
 
 
     private val log = AnkoLogger("MYPOS")
@@ -93,7 +92,7 @@ class MainActivity : AppCompatActivity() {
             val message = data?.getStringExtra("MESSAGE")
             // Set the message string in textView
            // toast(message)
-            lesonList.add(Klesson(message!!,33))
+            lesonList.add(KLesson(message!!,33))
             myListAdapter.notifyDataSetChanged()
            //   toast("XXXXXactivity result  Code : $message")
         }
@@ -106,7 +105,7 @@ class MainActivity : AppCompatActivity() {
     fun loadLessons(){
 
         log.warn ("loadLessons")
-        var a:List<Klesson> = DBH.Test()
+        var a:List<KLesson> = DBH.Test()
         for(item in a) {
             lesonList.add(item)
         }
