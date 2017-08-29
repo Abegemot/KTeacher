@@ -18,15 +18,23 @@ class Main2Activity : AppCompatActivity() {
     private val log = AnkoLogger("MYPOS")
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        log.debug("creatingMainAcctivity2")
+        log.warn("creatingMainAcctivity2")
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main2)
+        log.warn("creatingMainAcctivity3")
+        try {
+            setContentView(R.layout.activity_main2)
+        }catch( e:Exception){
+            log.warn("creatingMainAcc4 $e.message" )
+        }
       //  DB2=myDB.getInstance(this)
+        log.warn("creatingMainAcctivity2 before dbhelp")
         DBH=DBHelp.getInstance(this)
+        log.warn("creatingMainAcctivity2 PASSED")
 
     }
 
     fun onClickCancel(view: View){
+        log.warn ("onClickCancel")
         finish()
     }
 

@@ -19,12 +19,10 @@ import org.jetbrains.anko.*
 
 class MainActivity : AppCompatActivity() {
 
-    var lesonList = ArrayList<KLesson>()
     lateinit var myListAdapter:ArrayAdapter<KLesson>
-
-
     private val log = AnkoLogger("MYPOS")
     lateinit var DBH : DBHelp
+    var lesonList = ArrayList<KLesson>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         } }
 
         DBH=DBHelp.getInstance(this)
-        loadLessons()
+       // loadLessons()
 
 
 
@@ -71,10 +69,20 @@ class MainActivity : AppCompatActivity() {
         log.warn ("deleteLessonClick")
         DBH.DeleteLeson()
         lesonList.clear()
+        myListAdapter.notifyDataSetChanged()
     }
 
     fun editLessonClick(view: View){
         log.warn ("editLessonClick")
+        //DBH.CreateLessons();
+        //DBH.CreateKindOfExercises()
+        //DBH.LoadLessons()
+        DBH.DeleteKindOfExercises()
+        DBH.CreateKindOfExercises()
+        DBH.LoadKindOfExercises()
+        DBH.CEA()
+        DBH.LoadExercisesOfALesson(1)
+        //DBH.CreateKindOfExercises()
     }
 
     fun addLessonClick(view: View){
@@ -86,7 +94,7 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        //toast("activity result  resultCode $resultCode")
+        log.warn ("onActivityResult")
         if (resultCode === 2) {
             // fetch the message String
             val message = data?.getStringExtra("MESSAGE")
@@ -105,7 +113,7 @@ class MainActivity : AppCompatActivity() {
     fun loadLessons(){
 
         log.warn ("loadLessons")
-        var a:List<KLesson> = DBH.Test()
+        var a:List<KLesson> = DBH.LoadLessons()
         for(item in a) {
             lesonList.add(item)
         }
