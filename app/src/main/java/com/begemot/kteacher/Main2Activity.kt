@@ -44,7 +44,7 @@ class Main2Activity : AppCompatActivity() {
 //        toast("AddLesson myactivity2")
         log.warn("onclickaddlesson2")
 
-        val p = DBH.addLessonToDB(editText.text.toString())
+        val p = DBH.addLesson(editText.text.toString())
 
         var message = editText.text.toString()
        // toast(message)
@@ -53,7 +53,9 @@ class Main2Activity : AppCompatActivity() {
         // put the message to return as result in Intent
         intentMessage.putExtra("MESSAGE", message)
         // Set The Result in Intent
-        setResult(2, intentMessage)
+        var result :Int =2
+        if(p.idLeson<0) result=-1
+        setResult(result, intentMessage)
         finish()
 
     }

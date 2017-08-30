@@ -74,14 +74,19 @@ class MainActivity : AppCompatActivity() {
 
     fun editLessonClick(view: View){
         log.warn ("editLessonClick")
-        //DBH.CreateLessons();
+
+        DBH.createLessons();
+        DBH.loadLessons()
+        DBH.addLesson("MY LESSON")
+        DBH.deleteLesson(10)
+        DBH.deleteAllLessons()
+
         //DBH.CreateKindOfExercises()
-        //DBH.LoadLessons()
-        DBH.DeleteKindOfExercises()
-        DBH.CreateKindOfExercises()
-        DBH.LoadKindOfExercises()
-        DBH.CEA()
-        DBH.LoadExercisesOfALesson(1)
+        //DBH.DeleteKindOfExercises()
+        //DBH.CreateKindOfExercises()
+        //DBH.LoadKindOfExercises()
+        //DBH.CEA()
+        //DBH.LoadExercisesOfALesson(1)
         //DBH.CreateKindOfExercises()
     }
 
@@ -103,6 +108,8 @@ class MainActivity : AppCompatActivity() {
             lesonList.add(KLesson(message!!,33))
             myListAdapter.notifyDataSetChanged()
            //   toast("XXXXXactivity result  Code : $message")
+        }else{
+            toast("Lesson could not have been inserted ")
         }
 
 
@@ -113,7 +120,7 @@ class MainActivity : AppCompatActivity() {
     fun loadLessons(){
 
         log.warn ("loadLessons")
-        var a:List<KLesson> = DBH.LoadLessons()
+        var a:List<KLesson> = DBH.loadLessons()
         for(item in a) {
             lesonList.add(item)
         }
