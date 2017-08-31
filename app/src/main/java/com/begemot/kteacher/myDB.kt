@@ -17,10 +17,8 @@ class myDB(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "MyDatabase", null, 1) {
         private val log = AnkoLogger("MYPOS")
         @Synchronized
         fun getInstance(ctx: Context): myDB {
-
             if (instance == null) {
                 instance = myDB(ctx.getApplicationContext())
-
                 log.warn("myDB create instance")
             }
             return instance!!
@@ -29,26 +27,15 @@ class myDB(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "MyDatabase", null, 1) {
 
     override fun onCreate(db: SQLiteDatabase) {
         // Here you create tables
-
         log.warn("myDB.OnCreateDB")
-
         db.createTable("PROBA", true, Pair("PEPE", TEXT), Pair("ID", INTEGER))
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         // Here you can upgrade tables, as usual
         log.warn("JSJSJSJSJSJ  OnUpgradeDB")
-
         //db.dropTable("User", true)
     }
-
-    //fun getUsers(db: ManagedSQLiteOpenHelper): List = db.use {
-    //    db.select("Users")
-    //            .whereSimple("family_name = ?", "John")
-    //            .doExec()
-    //            .parseList(UserParser)
-    //}
-
 }
 
 // Access property for Context
@@ -115,7 +102,7 @@ class DBHelp(ctx: Context) {
 
     fun XCreateLessons(){
          log.warn("Begin CreateLessons")
-         envelope2() {
+         envelopeX(Unit) {
 
             log.warn("envelope unit")
              DB2.use { createTable("KINDOFEX", true, "ID" to INTEGER + PRIMARY_KEY, "T1" to TEXT, "T2" to TEXT) }
@@ -334,7 +321,7 @@ fun deleteAllLessons(){
         val rowParser = classParser<KExercice>()
         log.warn("enter CEA")
 
-       var l:List<Any> =envelope {
+       var l:List<Any> =envelopeX(emptyList()) {
             log.warn("enter enve  lope")
             DB2.use { createTable("KEXERCISE", true, "ID" to INTEGER + PRIMARY_KEY, "KINDOF" to INTEGER, "T1" to TEXT, "T2" to TEXT) }
             var ds: SQLiteDatabase = DB2.writableDatabase
@@ -386,6 +373,31 @@ fun deleteAllLessons(){
         }
         return 0
     }
+
+
+    fun notfun()
+    {
+        val rowParser = classParser<KExercice>()
+        val L2: List<KExercice> = envelopeX(emptyList()) {
+            //           log.warn("Entra TUT TUT")
+            DB2.use {  select("KEXERCISE", "ID", "T1", "T2").exec { parseList(rowParser) }  }
+        }
+
+        var ds: SQLiteDatabase = DB2.writableDatabase
+        val nR = envelopeX(0){   ds.delete("LESSONS").toLong()   }
+        log.warn("deleteALLLessons  returned = $nR")
+
+        val L3: List<KLesson> = envelopeX(emptyList()) {    DB2.use { select("LESSONS", "NAME", "ID").exec { parseList(classParser<KLesson>()) } } }
+    }
+
+
+    fun <T> envelopeX (default: T, letter: () -> T) = try {
+        letter()
+    } catch (e: Exception) {
+        log.warn("envelope exception:  ${e.message}   ${e.toString()}  ${e.stackTrace.toString()}")
+        default
+    }
+
 
  }
 
