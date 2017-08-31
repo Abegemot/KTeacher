@@ -152,7 +152,7 @@ class DBHelp(ctx: Context) {
 
     fun createExerciseTable(){
 
-        val rowParser = classParser<KExercice>()
+        val rowParser = classParser<KExercise>()
         log.warn("enter createExerciseTable")
         var l:List<Any> =envelopeX(emptyList()) {
             log.warn("enter enve  lope")
@@ -170,22 +170,33 @@ class DBHelp(ctx: Context) {
     }
 
     fun deleteExerciceTable(){
-        deleteTable("KEXERCICE")
+        deleteTable(KExercise.tName())
     }
 
 
-    fun loadLessonExercises(lesonID: Long): List<KExercice> {
+    fun loadLessonExercises(lesonID: Long): List<KExercise> {
         log.warn { "LoadExcercisesOfALesson" }
-        val L2: List<KExercice> = envelopeX(emptyList()) {       DB2.use {  select("KEXERCISE", "ID", "T1", "T2").exec { parseList(classParser<KExercice>()) }  }    }
+        val L2: List<KExercise> = envelopeX(emptyList()) {
+            DB2.use {  select(KExercise.tName(),*KExercise.tSelect).exec { parseList(classParser<KExercise>()) }  }
+
+        }
         log.warn("SIZE List OfExcecises Of X Lesson: $lesonID =  ${L2.size}")
         for (item in L2)  log.warn(item)
         return L2
     }
 
+    fun printAll(){
+        log.warn("begin printAll")
+
+        log.warn("end printAll")
+
+    }
+
 
     fun CEA(){
         log.warn("entering CEA ")
-        createLessons();
+
+        /*createLessons();
         loadLessons()
         addLesson("MY LESSON")
         deleteLesson(10)
@@ -197,7 +208,7 @@ class DBHelp(ctx: Context) {
         loadKindOfExercises()
 
         createExerciseTable()
-        deleteExerciceTable()
+        deleteExerciceTable()*/
         loadLessonExercises(1)
 
         log.warn("leaving CEA ")

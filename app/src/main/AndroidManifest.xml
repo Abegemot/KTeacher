@@ -21,8 +21,11 @@
         </activity>
         <activity
             android:name=".Main2Activity"
-            android:theme="@style/Theme.AppCompat.DayNight.Dialog.Alert">
-        </activity>
+            android:theme="@style/Theme.AppCompat.DayNight.Dialog.Alert"></activity>
+        <activity
+            android:name=".Main3Activity"
+            android:label="@string/title_activity_main3"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

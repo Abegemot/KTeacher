@@ -35,10 +35,12 @@ class MainActivity : AppCompatActivity() {
         myList.onItemClickListener = object : OnItemClickListener {override fun onItemClick
                 (parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 log.warn("onItemClickListener position = $position    id= $id")
+                goToLesson(id)
+
         } }
 
         DBH=DBHelp.getInstance(this)
-       // loadLessons()
+        loadLessons()
 
 
 
@@ -63,6 +65,15 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    fun goToLesson(iD:Long){
+        log.warn("HOSTI TU TIU")
+        val intento1 = Intent(this, Main3Activity::class.java)
+        startActivityForResult(intento1,2 )
+
+    }
+
+
 
 //TODO erase the lesson clicked
     fun deleteLessonClick(view: View){
