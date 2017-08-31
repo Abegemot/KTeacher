@@ -64,30 +64,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
+//TODO erase the lesson clicked
     fun deleteLessonClick(view: View){
         log.warn ("deleteLessonClick")
-        DBH.DeleteLeson()
+        DBH.deleteLesson(10)
         lesonList.clear()
         myListAdapter.notifyDataSetChanged()
     }
 
     fun editLessonClick(view: View){
         log.warn ("editLessonClick")
-
-        DBH.createLessons();
-        DBH.loadLessons()
-        DBH.addLesson("MY LESSON")
-        DBH.deleteLesson(10)
-        DBH.deleteAllLessons()
-
-        //DBH.CreateKindOfExercises()
-        //DBH.DeleteKindOfExercises()
-        //DBH.CreateKindOfExercises()
-        //DBH.LoadKindOfExercises()
-        //DBH.CEA()
-        //DBH.LoadExercisesOfALesson(1)
-        //DBH.CreateKindOfExercises()
+        DBH.CEA()
     }
 
     fun addLessonClick(view: View){

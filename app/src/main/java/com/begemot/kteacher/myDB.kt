@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.db.*
 import org.jetbrains.anko.warn
-import java.util.function.Predicate
 
 
 class myDB(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "MyDatabase", null, 1) {
@@ -61,31 +60,16 @@ class DBHelp(ctx: Context) {
         }
     }
 
-    fun OldCreateLessons() {
 
-        log.warn("CreateLessons")
-        try {
-            DB2.use { createTable("LESSONS", true, "ID" to INTEGER + PRIMARY_KEY, "NAME" to TEXT) }
-            // DB2!!.use { insert("LESSONS","true", "NAME" to "kkkkk")}
-            var ds: SQLiteDatabase = DB2.writableDatabase
-            ds.insert("LESSONS", "NAME" to "1PRIMERA LLICO")
-            ds.insert("LESSONS", "NAME" to "2PRIMERA LLICO")
-            ds.insert("LESSONS", "NAME" to "3PRIMERA LLICO")
-            ds.insert("LESSONS", "NAME" to "4PRIMERA LLICO")
-            ds.insert("LESSONS", "NAME" to "5PRIMERA LLICO")
-            ds.insert("LESSONS", "NAME" to "6PRIMERA LLICO")
-        } catch (e: Exception) {
-// handler
-            log.warn("CreateLessons Exception   $e.message")
-        } finally {
-// optional finally block
-        }
-
+    fun deleteTable(tableName:String){
+        var ds: SQLiteDatabase = DB2.writableDatabase
+        val nR = envelopeX(0L){   ds.delete("$tableName").toLong()   }
+        log.warn("deleteTable  $tableName  returned = $nR")
     }
 
     fun createLessons(){
         log.warn("Begin CreateLessons")
-        envelope2() {
+        envelopeX(Unit) {
             DB2.use { createTable("LESSONS", true, "ID" to INTEGER + PRIMARY_KEY, "NAME" to TEXT) }
             // DB2!!.use { insert("LESSONS","true", "NAME" to "kkkkk")}
             var ds: SQLiteDatabase = DB2.writableDatabase
@@ -99,54 +83,11 @@ class DBHelp(ctx: Context) {
         log.warn("End CreateLessons")
     }
 
-
-    fun XCreateLessons(){
-         log.warn("Begin CreateLessons")
-         envelopeX(Unit) {
-
-            log.warn("envelope unit")
-             DB2.use { createTable("KINDOFEX", true, "ID" to INTEGER + PRIMARY_KEY, "T1" to TEXT, "T2" to TEXT) }
-
-        }
-
-        var l:List<Any> = envelope(){
-            val rowParser = classParser<KLesson>()
-            DB2.use { select("KEXERCISE", "ID", "T1","T2").exec { parseList(rowParser) }}
-
-        }
-        log.warn("End CreateLessons")
-
-    }
-
-
-
-
-    fun oldaddLessonToDB(lesson: String): KLesson {
-        log.warn("DBHelp addLessonToDB")
-        var nR: Long = 0
-        var k: KLesson = KLesson("pepe", 10)
-
-        try {
-            var ds: SQLiteDatabase = DB2!!.writableDatabase
-            nR = ds.insert("LESSONS", "NAME" to lesson)
-            log.warn("Numero retornat per InsertLesson $nR")
-            ds.close()
-        } catch (e: Exception) {
-// handler
-            log.warn("Exception addLessonToDB  $e.message")
-        } finally {
-        }
-        k.idLeson = nR
-        k.nameLeson = lesson
-        return k
-    }
-
-
     fun addLesson(lesson: String): KLesson {
         log.warn("DBHelp addLessonToDB")
         var nR: Long = 0
         var k: KLesson = KLesson("pepe", 10)
-        nR = envelope3(){
+        nR = envelopeX(0L){
             var ds: SQLiteDatabase = DB2.writableDatabase
             ds.insert("LESSONS", "NAME" to lesson)
         }
@@ -156,172 +97,64 @@ class DBHelp(ctx: Context) {
         return k
     }
 
-fun deleteLesson(id:Long){
-    var ds: SQLiteDatabase = DB2.writableDatabase
-    val nR = envelope3(){     ds.delete("LESSONS","ID=$id").toLong()    }
-    log.warn("deleteLesson  returned = $nR")
-}
-
-fun deleteAllLessons(){
+    fun deleteLesson(id:Long) {
         var ds: SQLiteDatabase = DB2.writableDatabase
-        val nR = envelope3(){   ds.delete("LESSONS").toLong()   }
-        log.warn("deleteALLLessons  returned = $nR")
-}
-
-
-
-
-    fun OldLoadLessons(): List<KLesson> {
-        //val l:KLesson
-        log.warn { "LoadLesons" }
-        var ds: SQLiteDatabase = DB2!!.writableDatabase
-        val L2: List<KLesson>
-        val rowParser = classParser<KLesson>()
-        try {
-            L2 = DB2!!.use {
-                select("LESSONS", "NAME", "ID").exec { parseList(rowParser) }
-            }
-            log.warn("SIZE Lessons: ${L2.size}")
-            for (item in L2) log.warn(item)
-            return L2
-        } catch (e: Exception) {
-            log.warn("LoadLessons Exception: ${e.message}")
-        } finally {
-        }
-        return emptyList()
+        val nR = envelopeX(0L){     ds.delete("LESSONS","ID=$id").toLong()    }
+        log.warn("deleteLesson  returned = $nR")
     }
 
+    fun deleteAllLessons(){
+         deleteTable("LESSONS")
+    }
 
     fun loadLessons(): List<KLesson> {
-        //val l:KLesson
         log.warn { "LoadLesons" }
-        val L2: List<KLesson> = envelope() {    DB2.use { select("LESSONS", "NAME", "ID").exec { parseList(classParser<KLesson>()) } } }
+        val L2: List<KLesson> = envelopeX(emptyList()) {    DB2.use { select("LESSONS", "NAME", "ID").exec { parseList(classParser<KLesson>()) } } }
         log.warn("SIZE Lessons: ${L2.size}")
         for (item in L2) log.warn(item)
         return L2
     }
 
-    fun DeleteLeson() {
-        var ds: SQLiteDatabase = DB2!!.writableDatabase
-        try {
-            ds.delete("LESSONS")
 
-        } catch (e: Exception) {
-            log.warn("Delete Exception:  ${e.message}")
-        } finally {
-        }
+    fun createKindOfExercises() {
 
+        log.warn("createKindOfExcercises")
+           envelopeX(Unit) {
+               DB2.use { createTable("KINDOFEX", true, "ID" to INTEGER + PRIMARY_KEY, "T1" to TEXT, "T2" to TEXT) }
+               // DB2!!.use { insert("LESSONS","true", "NAME" to "kkkkk")}
+               var ds: SQLiteDatabase = DB2!!.writableDatabase
+               ds.insert("KINDOFEX", "T1" to "Select from a set of russian words to form a frase", "T2" to "")
+               ds.insert("KINDOFEX", "T1" to "Form par of words to find antonims", "T2" to "")
+               ds.insert("KINDOFEX", "T1" to "who knows what", "T2" to "")
+           }
+     }
 
-    }
-
-    fun DeleteKindOfExercises() {
-        var ds: SQLiteDatabase = DB2!!.writableDatabase
-        try {
-            ds.delete("KINDOFEX")
-
-        } catch (e: Exception) {
-            log.warn("DeleteKindOfEx Exception:  ${e.message}")
-        } finally {
-        }
-
-
-    }
-
-
-    fun CreateKindOfExercises() {
-
-        log.warn("CreateKindOfExcercises")
-        try {
-            DB2!!.use { createTable("KINDOFEX", true, "ID" to INTEGER + PRIMARY_KEY, "T1" to TEXT, "T2" to TEXT) }
-            // DB2!!.use { insert("LESSONS","true", "NAME" to "kkkkk")}
-            var ds: SQLiteDatabase = DB2!!.writableDatabase
-            ds.insert("KINDOFEX", "T1" to "Select from a set of russian words to form a frase", "T2" to "")
-            ds.insert("KINDOFEX", "T1" to "Form par of words to find antonims", "T2" to "")
-            ds.insert("KINDOFEX", "T1" to "who knows what", "T2" to "")
-
-        } catch (e: Exception) {
-// handler
-            log.warn("CreateKindOfExcercises   $e.message")
-        } finally {
-// optional finally block
-        }
-
-    }
-
-    fun LoadKindOfExercises(): List<KKindOfExercice> {
-        //fun LoadKindOfExercises():List<String> {
-        //val l:KLesson
+    fun loadKindOfExercises(): List<KKindOfExercice> {
         log.warn { "LoadKindOfExcercises" }
         var ds: SQLiteDatabase = DB2!!.writableDatabase
-        val L2: List<KKindOfExercice>
-//        val L2: List<String>
-        val rowParser = classParser<KKindOfExercice>()
-//        val rowParser = classParser<String>()
-        try {
-            log.warn("Entra")
-            L2 = DB2!!.use {
-                select("KINDOFEX", "ID", "T1", "T2").exec { parseList(rowParser) }
-                //select("KINDOFEX", "T1").exec { parseList(rowParser) }
-            }
-
-            log.warn("SIZE List KindOfLessons: ${L2.size}")
-            for (item in L2) log.warn(item)
-            return L2
-        } catch (e: Exception) {
-            log.warn("LoadKindOfExcercises Exception:  ${e.message}   ${e.toString()}  ${e.stackTrace.toString()}")
-        } finally {
-        }
-        return emptyList()
-    }
-
-
-    fun oldLoadExercisesOfALesson(lesonID: Long): List<KExercice> {
-        log.warn { "LoadExcercisesOfALesson" }
-        val L2: List<KExercice>
-        val rowParser = classParser<KExercice>()
-        // envelope() {
-        try {
-            log.warn("Entra")
-            L2 = DB2.use {
-                select("KEXERCISE", "ID", "T1", "T2").exec { parseList(rowParser) }
-
-            }
-            log.warn("SIZE List OfExcecises Of Lesson:$lesonID =  ${L2.size}")
-            for (item in L2) log.warn(item)
-            return L2
-        } catch (e: Exception) {
-            log.warn("LoadExercicesOfALesson Exception:  ${e.message}   ${e.toString()}  ${e.stackTrace.toString()}")
-        } finally {
-        }
-        //}
-        return emptyList()
-
-    }
-
-    fun LoadExercisesOfALesson(lesonID: Long): List<KExercice> {
-        log.warn { "LoadExcercisesOfALesson" }
-        val rowParser = classParser<KExercice>()
-        val L2: List<KExercice> = envelope() {
-            //           log.warn("Entra TUT TUT")
-           DB2.use {  select("KEXERCISE", "ID", "T1", "T2").exec { parseList(rowParser) }  }
-        }
-        log.warn("SIZE List OfExcecises Of X Lesson: $lesonID =  ${L2.size}")
-        for (item in L2) { log.warn(item)     }
+        val L2: List<KKindOfExercice> = envelopeX(emptyList()) {  DB2.use { select("KINDOFEX", "ID", "T1", "T2").exec { parseList(classParser<KKindOfExercice>()) } } }
+        log.warn("SIZE List KindOfLessons: ${L2.size}")
+        for (item in L2) log.warn(item)
         return L2
     }
 
 
 
-    fun DeleteExerciseOfALeson(){
-
+    fun deleteKindOfExercises() {
+        deleteTable("KINDOFEX")
+//        var ds: SQLiteDatabase = DB2.writableDatabase
+//        val nR = envelopeX(0L){   ds.delete("KINDOFEX").toLong() }
+//        log.warn("deleteKindOfExercises :  $nR")
     }
 
-    //fun CEA(lesonID:Long,exercise:KExercice)
-    fun CEA(){
-        val rowParser = classParser<KExercice>()
-        log.warn("enter CEA")
 
-       var l:List<Any> =envelopeX(emptyList()) {
+
+
+    fun createExerciseTable(){
+
+        val rowParser = classParser<KExercice>()
+        log.warn("enter createExerciseTable")
+        var l:List<Any> =envelopeX(emptyList()) {
             log.warn("enter enve  lope")
             DB2.use { createTable("KEXERCISE", true, "ID" to INTEGER + PRIMARY_KEY, "KINDOF" to INTEGER, "T1" to TEXT, "T2" to TEXT) }
             var ds: SQLiteDatabase = DB2.writableDatabase
@@ -333,61 +166,41 @@ fun deleteAllLessons(){
 
             DB2.use { select("KEXERCISE", "ID", "T1","T2").exec { parseList(rowParser) }}
         }
-       log.warn("leaving CEA listsize: ${l.size}")
+       log.warn("leaving createExerciseTable: ${l.size}")
+    }
+
+    fun deleteExerciceTable(){
+        deleteTable("KEXERCICE")
     }
 
 
-
-    fun  envelope2 (leter:(Unit) -> Unit):Unit{
-        log.warn("TRULLYYYY   enter envelope2 no return")
-
-        try {
-            leter.invoke(Unit)
-            log.warn("TRULLYYYY   exiting envelope")
-        } catch (e: Exception) {
-            log.warn("envelope exception:  ${e.message}   ${e.toString()}  ${e.stackTrace.toString()}")
-        } finally {
-        }
-
-    }
-
-    fun<T> envelope (leter:(Unit) -> List<T> ): List<T> {
-        log.warn("TRULLYYYY   enter envelope  return list")
-        try {
-            return leter.invoke(Unit)
-        } catch (e: Exception) {
-            log.warn("envelope exception:  ${e.message}   ${e.toString()}  ${e.stackTrace.toString()}")
-        } finally {
-        }
-        return emptyList()
+    fun loadLessonExercises(lesonID: Long): List<KExercice> {
+        log.warn { "LoadExcercisesOfALesson" }
+        val L2: List<KExercice> = envelopeX(emptyList()) {       DB2.use {  select("KEXERCISE", "ID", "T1", "T2").exec { parseList(classParser<KExercice>()) }  }    }
+        log.warn("SIZE List OfExcecises Of X Lesson: $lesonID =  ${L2.size}")
+        for (item in L2)  log.warn(item)
+        return L2
     }
 
 
-    fun envelope3 (leter:(Unit) -> Long ): Long {
-        log.warn("TRULLYYYY   enter envelope  return long")
-        try {
-            return leter.invoke(Unit)
-        } catch (e: Exception) {
-            log.warn("envelope exception:  ${e.message}   ${e.toString()}  ${e.stackTrace.toString()}")
-        } finally {
-        }
-        return 0
-    }
+    fun CEA(){
+        log.warn("entering CEA ")
+        createLessons();
+        loadLessons()
+        addLesson("MY LESSON")
+        deleteLesson(10)
+        deleteAllLessons()
 
+        createKindOfExercises()
+        deleteKindOfExercises()
+        createKindOfExercises()
+        loadKindOfExercises()
 
-    fun notfun()
-    {
-        val rowParser = classParser<KExercice>()
-        val L2: List<KExercice> = envelopeX(emptyList()) {
-            //           log.warn("Entra TUT TUT")
-            DB2.use {  select("KEXERCISE", "ID", "T1", "T2").exec { parseList(rowParser) }  }
-        }
+        createExerciseTable()
+        deleteExerciceTable()
+        loadLessonExercises(1)
 
-        var ds: SQLiteDatabase = DB2.writableDatabase
-        val nR = envelopeX(0){   ds.delete("LESSONS").toLong()   }
-        log.warn("deleteALLLessons  returned = $nR")
-
-        val L3: List<KLesson> = envelopeX(emptyList()) {    DB2.use { select("LESSONS", "NAME", "ID").exec { parseList(classParser<KLesson>()) } } }
+        log.warn("leaving CEA ")
     }
 
 

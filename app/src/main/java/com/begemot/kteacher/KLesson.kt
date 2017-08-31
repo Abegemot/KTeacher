@@ -6,8 +6,5 @@ package com.begemot.kteacher
 data class KLesson(var nameLeson: String = "", var idLeson: Long =0){
     override fun toString(): String {
         return nameLeson.toString()
-        //COMIT CHANGES 2
-
     }
-
 }
