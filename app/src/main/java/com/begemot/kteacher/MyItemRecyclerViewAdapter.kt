@@ -17,15 +17,14 @@ import com.begemot.kteacher.dummy.DummyContent.DummyItem
  */
  class MyItemRecyclerViewAdapter(private val mValues:List<DummyItem>, private val mListener:OnListFragmentInteractionListener?):RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder>() {
     private val log = AnkoLogger("MYPOS")
-public override fun onCreateViewHolder(parent:ViewGroup, viewType:Int):ViewHolder {
-
-val view = LayoutInflater.from(parent.getContext())
-.inflate(R.layout.fragment_item, parent, false)
-return ViewHolder(view)
+    public override fun onCreateViewHolder(parent:ViewGroup, viewType:Int):ViewHolder {
+        log.warn("MyItemRecicleViewAdapter  onCreateViewHolder")
+        val view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_item, parent, false)
+        return ViewHolder(view)
 }
 
 public override fun onBindViewHolder(holder:ViewHolder, position:Int) {
-    log.warn("onBindViewHolder")
+    log.warn("MyItemRecicleViewAdapter  onBindViewHolder")
 holder.mItem = mValues.get(position)
 holder.mIdView.setText(mValues.get(position).id)
 holder.mContentView.setText(mValues.get(position).content)
@@ -34,6 +33,7 @@ holder.mView.setOnClickListener(object:View.OnClickListener {
 public override fun onClick(v:View) {
 if (null != mListener)
 {
+    log.warn("MyItemRecicleViewAdapter  setOnClickListener")
 
  // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
