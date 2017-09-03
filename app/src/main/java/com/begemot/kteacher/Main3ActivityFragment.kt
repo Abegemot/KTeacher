@@ -6,24 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import org.jetbrains.anko.*
+import com.begemot.klib.*
 
 /**
  * A placeholder fragment containing a simple view.
  */
 class Main3ActivityFragment : Fragment() {
 
-    // private val log  = AnkoLogger <Main3ActivityFragment> ()
-    //
-    private val log = AnkoLogger("MYPOS")
+    private val X = KHelp("${this.javaClass.simpleName}")
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-
-
-//        var s:String="java Class Name :${this.javaClass.name} \n javaClass simpleName :${this.javaClass.simpleName} \n javaClass.canonicalName :${this.javaClass.canonicalName}"
-//        log.warn("_NAME::   $s")
-        //val clazz = javaClass<MyClass>
-         log.warn("${this.javaClass.name}   onCreateView------------------------------------------------------------------------")
+        X.warn("onCreateView")
         return inflater.inflate(R.layout.fragment_main3, container, false)
     }
 }

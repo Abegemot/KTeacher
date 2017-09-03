@@ -14,13 +14,15 @@ import android.content.Intent
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import android.widget.*
+import com.begemot.klib.KHelp
 import org.jetbrains.anko.*
 
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var myListAdapter:ArrayAdapter<KLesson>
-    private val log = AnkoLogger("MYPOS")
+    //private val log = AnkoLogger("MYPOS")
+    private val X = KHelp("${this.javaClass.simpleName}")
     lateinit var DBH : DBHelp
     var lesonList = ArrayList<KLesson>()
 
@@ -34,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         myList.adapter=myListAdapter
         myList.onItemClickListener = object : OnItemClickListener {override fun onItemClick
                 (parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                log.warn("onItemClickListener position = $position    id= $id")
+                X.warn("onItemClickListener position = $position    id= $id")
                 goToLesson(id)
 
         } }
@@ -67,7 +69,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun goToLesson(iD:Long){
-        log.warn("HOSTI TU TIU")
+        X.warn("HOSTI TU TIU")
         val intento1 = Intent(this, Main3Activity::class.java)
         startActivityForResult(intento1,2 )
 
@@ -77,19 +79,19 @@ class MainActivity : AppCompatActivity() {
 
 //TODO erase the lesson clicked
     fun deleteLessonClick(view: View){
-        log.warn ("deleteLessonClick")
+        X.warn ("deleteLessonClick")
         DBH.deleteLesson(10)
         lesonList.clear()
         myListAdapter.notifyDataSetChanged()
     }
 
     fun editLessonClick(view: View){
-        log.warn ("editLessonClick")
+        X.warn ("editLessonClick")
         DBH.CEA()
     }
 
     fun addLessonClick(view: View){
-        log.warn("addlessonclick")
+        X.warn("addlessonclick")
         val intento1 = Intent(this, Main2Activity::class.java)
         startActivityForResult(intento1,2 )
     }
@@ -97,7 +99,7 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        log.warn ("onActivityResult")
+        X.warn ("onActivityResult")
         if (resultCode === 2) {
             // fetch the message String
             val message = data?.getStringExtra("MESSAGE")
@@ -117,7 +119,7 @@ class MainActivity : AppCompatActivity() {
 
     fun loadLessons(){
 
-        log.warn ("loadLessons")
+        X.warn ("loadLessons")
         var a:List<KLesson> = DBH.loadLessons()
         for(item in a) {
             lesonList.add(item)
